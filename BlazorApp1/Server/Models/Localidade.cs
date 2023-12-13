@@ -7,9 +7,9 @@ namespace BlazorApp1.Server.Models
     {
 
         [Key]
-        int Id { get; set; }
-        string? Cidade { get; set; }
-        string? Estado { get; set; }
-        string? CodigoIbge { get; set; }
+        public int Id { get; set; }
+        public string? Cidade { get; set; }
+        public string? Estado { get; set; }
+        public string? CodigoIbge { get; set; }
     }
 }
