@@ -13,5 +13,7 @@ namespace BlazorApp1.Server.Data
             IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
         {
         }
+
+        public DbSet<Localidade> Localidade { get; set; }
     }
 }
