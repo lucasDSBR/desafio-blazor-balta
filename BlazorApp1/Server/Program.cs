@@ -1,5 +1,8 @@
 using BlazorApp1.Server.Data;
+using BlazorApp1.Server.Interfaces;
 using BlazorApp1.Server.Models;
+using BlazorApp1.Server.Repository;
+using BlazorApp1.Server.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +26,9 @@ builder.Services.AddAuthentication()
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
+builder.Services.AddScoped<ILocalidadeBuscaService, LocalidadeBuscaServices>();
+builder.Services.AddScoped<ILocalidadeBuscaRepository, LocalidadeBuscaRepository>();
 
 var app = builder.Build();
 

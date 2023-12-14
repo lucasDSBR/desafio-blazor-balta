@@ -14,6 +14,6 @@ namespace BlazorApp1.Server.Data
         {
         }
 
-        public DbSet<Localidade> Localidade { get; set; }
+        public DbSet<Ibge> Ibge { get; set; }
     }
 }
