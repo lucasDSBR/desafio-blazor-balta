@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using BlazorBalta.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace BlazorBalta.Data
@@ -9,5 +10,8 @@ namespace BlazorBalta.Data
             : base(options)
         {
         }
+
+        public DbSet<Ibge> Ibge { get; set; }
+
     }
 }

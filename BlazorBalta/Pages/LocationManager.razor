@@ -1,0 +1,47 @@
+﻿@page "/locationmanager"
+
+@using Microsoft.AspNetCore.Authorization
+@using BlazorBalta.Models
+@attribute [Authorize]
+@inject IJSRuntime _JSRuntime
+@inject BlazorBalta.Services.IIbgeService _ibgeService;
+
+<h3>Place Manager</h3>
+
+<table class="table table-responsive table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>State</th>
+            <th>City</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (ibgeList != null && ibgeList.Count > 0)
+        {
+            foreach (var ibgeItem in ibgeList)
+            {
+                <tr>
+                    <td>@ibgeItem.Id</td>
+                    <td>@ibgeItem.State</td>
+                    <td>@ibgeItem.City</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@code {
+    List<Ibge> ibgeList = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        ibgeList = await _ibgeService.FindAll();
+    }
+
+    async Task DeleteIbgeRecord(int id)
+    {
+        
+    }
+
+}
