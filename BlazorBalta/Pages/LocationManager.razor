@@ -6,42 +6,129 @@
 @inject IJSRuntime _JSRuntime
 @inject BlazorBalta.Services.IIbgeService _ibgeService;
 
-<h3>Place Manager</h3>
 
-<table class="table table-responsive table-striped">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>State</th>
-            <th>City</th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (ibgeList != null && ibgeList.Count > 0)
-        {
-            foreach (var ibgeItem in ibgeList)
-            {
+<body>
+    <div class="container text-start">
+        <h3>Place Manager</h3>
+    </div>
+    <div class="container text-center">
+        <div class="row align-items-start">
+            <div class="col">
+                <input type="number" class="form-control" id="exampleInputEmail1" placeholder="Código IBGE" autocomplete="false" aria-describedby="emailHelp" @oninput="AtualizaIbge">
+            </div>
+            <div class="col">
+                <select class="form-select" aria-label="Default select example" @onchange="AtualizaCidade">
+                    <option selected value="">Selecione uma Cidade</option>
+                    @if (cidadesLits != null && cidadesLits.Count > 0)
+                    {
+                        foreach (var cidade in cidadesLits)
+                        {
+                            <option value="@cidade">@cidade</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col">
+                <select class="form-select" aria-label="Default select example" @onchange="AtualizaEstado">
+                    <option selected value="">Selecione um Estado</option>
+                    @if (estadosLits != null && estadosLits.Count > 0)
+                    {
+                        foreach (var estado in estadosLits)
+                        {
+                            <option value="@estado">@estado</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col">
+                <div class="row align-items-start">
+                    <button type="button" class="btn btn-primary" @onclick="BuscarFiltro">Buscar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-md">
+        <table class="table table-responsive table-striped">
+            <thead>
                 <tr>
-                    <td>@ibgeItem.Id</td>
-                    <td>@ibgeItem.State</td>
-                    <td>@ibgeItem.City</td>
+                    <th>ID</th>
+                    <th>State</th>
+                    <th>City</th>
                 </tr>
-            }
-        }
-    </tbody>
-</table>
+            </thead>
+            <tbody>
+                @if (Carregar)
+                {
+                    <p>Carregando lista...</p>
+                }
+                @if (ibgeList != null && ibgeList.Count > 0 && !Carregar)
+                {
+                    foreach (var ibgeItem in ibgeList)
+                    {
+                        <tr>
+                            <td>@ibgeItem.Id</td>
+                            <td>@ibgeItem.State</td>
+                            <td>@ibgeItem.City</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <p>Sem dados...</p>
+                }
+            </tbody>
+        </table>
+    </div>
+</body>
+
 
 @code {
+    public bool Carregar { get; set; } = false;
     List<Ibge> ibgeList = new();
+    List<string?> estadosLits = new();
+    List<string?> cidadesLits = new();
+    public string CodigoIbge { get; set; } = "";
+    public string Estado { get; set; } = "";
+    public string Cidade { get; set; } = "";
+    public string Teste { get; set; } = "";
 
     protected override async Task OnInitializedAsync()
     {
         ibgeList = await _ibgeService.FindAll();
+        estadosLits = await _ibgeService.FindEstados();
+        cidadesLits = await _ibgeService.FindCidades();
     }
 
     async Task DeleteIbgeRecord(int id)
     {
-        
+
     }
+
+    private void AtualizaIbge(ChangeEventArgs e) => CodigoIbge = e.Value?.ToString();
+    private void AtualizaEstado(ChangeEventArgs e) => Estado = e.Value?.ToString();
+    private void AtualizaCidade(ChangeEventArgs e) => Cidade = e.Value?.ToString();
+
+
+    private void BuscarFiltro()
+    {
+        this.Carregar = true;
+        List<Ibge> ibgeList = new();
+        Ibge dados = new Ibge();
+        dados.State = Estado;
+        dados.City = Cidade;
+        dados.Id = CodigoIbge;
+        ibgeList = _ibgeService.BuscarFiltro(dados);
+        if (ibgeList != null)
+        {
+            this.ibgeList = ibgeList;
+            this.Carregar = false;
+        }
+        else
+        {
+            this.Carregar = false;
+        }
+
+    }
+
 
 }
