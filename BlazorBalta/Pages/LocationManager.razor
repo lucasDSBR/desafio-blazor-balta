@@ -5,11 +5,11 @@
 @attribute [Authorize]
 @inject IJSRuntime _JSRuntime
 @inject BlazorBalta.Services.IIbgeService _ibgeService;
-
+@inject NavigationManager _navigationManager;
 
 <body>
     <div class="container text-start">
-        <h3>Place Manager</h3>
+        <h3>Location Manager</h3>
     </div>
     <div class="container text-center">
         <div class="row align-items-start">
@@ -54,6 +54,11 @@
                     <th>ID</th>
                     <th>State</th>
                     <th>City</th>
+                    <th width="185px">
+                        <button class="btn-success" style="width: 100%;">
+                            <NavLink href="/createlocation" style="color: inherit; text-decoration: none; width: 100%;">Novo</NavLink>
+                        </button>
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -69,6 +74,10 @@
                             <td>@ibgeItem.Id</td>
                             <td>@ibgeItem.State</td>
                             <td>@ibgeItem.City</td>
+                            <td>
+                                <a href="/updatelocation/@ibgeItem.Id" class="btn btn-warning">Atualizar</a>
+                                <button class="btn btn-danger" @onclick="async () => await DeleteIbgeRecord(ibgeItem.Id)">Deletar</button>
+                            </td>
                         </tr>
                     }
                 }
@@ -99,10 +108,20 @@
         cidadesLits = await _ibgeService.FindCidades();
     }
 
-    async Task DeleteIbgeRecord(int id)
+    async Task DeleteIbgeRecord(string id)
     {
+        bool confirmed = await _JSRuntime.InvokeAsync<bool>("confirm", "Tem certeza que deseja deletar esse item?");
+        if (confirmed is false)
+            return;
+
+        var ibge = await _ibgeService.GetBy(id);
+
+        await _ibgeService.Delete(ibge);
+
+        ibgeList = await _ibgeService.FindAll();
 
     }
+
 
     private void AtualizaIbge(ChangeEventArgs e) => CodigoIbge = e.Value?.ToString();
     private void AtualizaEstado(ChangeEventArgs e) => Estado = e.Value?.ToString();

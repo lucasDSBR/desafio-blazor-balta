@@ -1,0 +1,47 @@
+﻿@page "/updatelocation/{id}"
+
+@using Microsoft.AspNetCore.Authorization
+@using BlazorBalta.Models
+@attribute [Authorize]
+@inject NavigationManager _navigationManager;
+@inject BlazorBalta.Services.IIbgeService _ibgeService;
+
+<h3>Update Location</h3>
+
+<EditForm Model="ibge" OnValidSubmit="UpdateIbge">
+    <div class="form-group mb-3">
+        <label>ID</label>
+        <InputText @bind-Value="ibge.Id" class="form-control" id="ibgeName"></InputText>
+    </div>
+    <div class="form-group mb-3">
+        <label>State</label>
+        <InputText @bind-Value="ibge.State" class="form-control" id="ibgeState"></InputText>
+    </div>
+    <div class="form-group mb-3">
+        <label>City</label>
+        <InputText @bind-Value="ibge.City" class="form-control" id="ibgeCity"></InputText>
+    </div>
+
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    <ValidationSummary></ValidationSummary>
+
+    <button class="btn-success" type="submit">Salvar</button>
+</EditForm>
+
+@code {
+    Ibge ibge = new();
+
+    [Parameter] public string? Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        ibge = await _ibgeService.GetBy(Id);
+    }
+
+    async Task UpdateIbge()
+    {
+        await _ibgeService.Update(ibge);
+
+        _navigationManager.NavigateTo("/locationmanager");
+    }
+}
