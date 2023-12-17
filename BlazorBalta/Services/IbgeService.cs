@@ -41,7 +41,12 @@ namespace BlazorBalta.Services
 
         public async Task<List<Ibge>> FindAll()
         {
-            var IbgeList = await _context.Ibge.OrderBy(i => i.Id).Take(30).ToListAsync();
+            var position = 20;
+            var IbgeList = await _context.Ibge
+                .OrderBy(i => i.Id)
+                .Skip(position)
+                .Take(30)
+                .ToListAsync();
             return IbgeList;
         }
         public List<Ibge> BuscarFiltro(Ibge ibge)
