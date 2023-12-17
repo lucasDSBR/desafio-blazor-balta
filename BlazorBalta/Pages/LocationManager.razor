@@ -55,9 +55,9 @@
                     <th>State</th>
                     <th>City</th>
                     <th width="185px">
-                        <button class="btn-success" style="width: 100%;">
-                            <NavLink href="/createlocation" style="color: inherit; text-decoration: none; width: 100%;">Novo</NavLink>
-                        </button>
+                        <div class="row align-items-start">
+                            <a href="/createlocation" class="btn btn-success">Novo</a>
+                        </div>
                     </th>
                 </tr>
             </thead>
@@ -75,8 +75,10 @@
                             <td>@ibgeItem.State</td>
                             <td>@ibgeItem.City</td>
                             <td>
-                                <a href="/updatelocation/@ibgeItem.Id" class="btn btn-warning">Atualizar</a>
-                                <button class="btn btn-danger" @onclick="async () => await DeleteIbgeRecord(ibgeItem.Id)">Deletar</button>
+                                <div class="d-flex justify-content-center">
+                                    <a href="/updatelocation/@ibgeItem.Id" class="btn btn-warning w-50 m-1">Atualizar</a>
+                                    <a class="btn btn-danger w-50 m-1" @onclick="async () => await DeleteIbgeRecord(ibgeItem.Id)">Deletar</a>
+                                </div>
                             </td>
                         </tr>
                     }
