@@ -41,7 +41,12 @@ namespace BlazorBalta.Services
 
         public async Task<List<Ibge>> FindAll()
         {
-            var IbgeList = await _context.Ibge.OrderByDescending(i => i.Id).ToListAsync();
+            var position = 20;
+            var IbgeList = await _context.Ibge
+                .OrderBy(i => i.Id)
+                .Skip(position)
+                .Take(30)
+                .ToListAsync();
             return IbgeList;
         }
         public List<Ibge> BuscarFiltro(Ibge ibge)
@@ -58,10 +63,11 @@ namespace BlazorBalta.Services
         }
         public async Task<List<string>> FindEstados()
         {
-            List<string> EstadosList = null;
+            List<string> EstadosList = new();
             EstadosList = await _context.Ibge
                 .Select(e => e.State)
                 .Distinct()
+                .OrderBy(e => e)
                 .ToListAsync();
             return EstadosList;
 
@@ -72,6 +78,7 @@ namespace BlazorBalta.Services
             CidadesList = await _context.Ibge
                 .Select(c => c.City)
                 .Distinct()
+                .OrderBy(c => c)
                 .ToListAsync();
             return CidadesList;
         }
