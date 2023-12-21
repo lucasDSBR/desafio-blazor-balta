@@ -67,15 +67,5 @@ namespace BlazorBalta.Services
             return EstadosList;
 
         }
-        public async Task<List<string>> FindCidades()
-        {
-            List<string> CidadesList = new();
-            CidadesList = await _context.Ibge
-                .Select(c => c.City)
-                .Distinct()
-                .OrderBy(c => c)
-                .ToListAsync();
-            return CidadesList;
-        }
     }
 }
